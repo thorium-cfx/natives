@@ -13,6 +13,10 @@ MINOR=${7:-0}
 prevTag=$(git tag -l $PREFIX$MAJOR.*)
 IFS='.-' read -r prevMajor prevMinor prevDaysSince prevDailyChanges prevCompatCount <<< ${prevTag#*$PREFIX}
 
+echo git remote show origin
+echo $prevTag
+
+
 # if tag is not found or processable then it's either the first run or something is wrong
 if [[ -z $prevMajor ]]; then
 	declare prev{Major,Minor,DaysSince,DailyChanges,CompatCount}=-1
