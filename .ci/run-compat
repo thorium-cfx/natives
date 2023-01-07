@@ -13,6 +13,7 @@ MINOR=${7:-0}
 prevTag=$(git describe --tags --abbrev=0 --match $PREFIX$MAJOR.* 2>/dev/null)
 echo $prevTag
 git describe --tags --abbrev=0 --match $PREFIX$MAJOR.*
+git tag -l $PREFIX$MAJOR.*
 echo $PREFIX$MAJOR.*
 IFS='.-' read -r prevMajor prevMinor prevDaysSince prevDailyChanges prevCompatCount <<< ${prevTag#*$PREFIX}
 
