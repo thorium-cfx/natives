@@ -13,7 +13,7 @@ MINOR=${7:-0}
 prevTag=$(git tag -l $PREFIX$MAJOR.*)
 IFS='.-' read -r prevMajor prevMinor prevDaysSince prevDailyChanges prevCompatCount <<< ${prevTag#*$PREFIX}
 
-echo git remote show origin
+echo $(git remote show origin)
 echo $prevTag
 
 
