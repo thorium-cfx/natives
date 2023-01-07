@@ -6,8 +6,8 @@ OUTPUT_FILE=${2:-"./out/natives_global_client_compat.lua"}
 FORCE_UPDATE=${3:-false}
 DAYS_SINCE_DATE=${4:-01/01/2022} #MM/DD/YYYY
 PREFIX=${5:-c}
-MAJOR=2
-MINOR=${6:-0}
+MAJOR=${6:-2}
+MINOR=${7:-0}
 
 # previous/current version data
 prevTag=$(git tag -l $PREFIX$MAJOR.*)
@@ -16,7 +16,7 @@ IFS='.-' read -r prevMajor prevMinor prevDaysSince prevDailyChanges prevCompatCo
 # if tag is not found or processable then it's either the first run or something is wrong
 if [[ -z $prevMajor ]]; then
 	declare prev{Major,Minor,DaysSince,DailyChanges,CompatCount}=-1
-	echo Warning: previous tag \"$prevTag\" was not found, if this wasn\'t the first run then something went wrong
+	echo Warning: couldn\'t find previous tag \"$PREFIX$MAJOR.*\", if this wasn\'t the first run then something went wrong
 fi
 
 # new/next version data
