@@ -5,7 +5,7 @@ ns: ENTITY
 
 ```c
 // 0xC5F68BE9613E2D18 0xC1C0855A
-void APPLY_FORCE_TO_ENTITY(Entity entity, int forceType, float x, float y, float z, float offX, float offY, float offZ, int boneIndex, BOOL isDirectionRel, BOOL ignoreUpVec, BOOL isForceRel, BOOL p12, BOOL p13);
+void APPLY_FORCE_TO_ENTITY(Entity entity, float forceType, float x, float y, float z, float offX, float offY, float offZ, int boneIndex, BOOL isDirectionRel, BOOL ignoreUpVec, BOOL isForceRel, BOOL p12, BOOL p13);
 ```
 
 Applies a force to the specified entity.
