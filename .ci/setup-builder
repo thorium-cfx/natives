@@ -10,6 +10,6 @@ sudo ln -s libclang-10.so.1 /usr/lib/x86_64-linux-gnu/libclang.so
 mkdir -p $BUILDER_ROOT
 cd $BUILDER_ROOT
 
-git clone https://github.com/citizenfx/native-doc-tooling.git .
-git checkout b45ca5ae80b8654e5ea28ee81e6dedd7947f9ca7
+git clone https://github.com/thorium-cfx/native-doc-tooling.git .
+#git checkout b45ca5ae80b8654e5ea28ee81e6dedd7947f9ca7
 yarn

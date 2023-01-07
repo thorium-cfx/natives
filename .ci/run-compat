@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# configuration
+GENERATOR_PATH="$1/compatgen.js"
+OUTPUT_FILE=${2:-"./out/natives_global_client_compat.lua"}
+FORCE_UPDATE=${3:-false}
+DAYS_SINCE_DATE=${4:-01/01/2022} #MM/DD/YYYY
+PREFIX=${5:-c}
+MAJOR=2
+MINOR=${6:-0}
+
+# previous/current version data
+prevTag=$(git tag -l $PREFIX$MAJOR.*)
+IFS='.-' read -r prevMajor prevMinor prevDaysSince prevDailyChanges prevCompatCount <<< ${prevTag#*$PREFIX}
+
+# if tag is not found or processable then it's either the first run or something is wrong
+if [[ -z $prevMajor ]]; then
+	declare prev{Major,Minor,DaysSince,DailyChanges,CompatCount}=-1
+	echo Warning: previous tag \"$prevTag\" was not found, if this wasn\'t the first run then something went wrong
+fi
+
+# new/next version data
+nextDaysSince=$((($(date +%s) - $(date -d $DAYS_SINCE_DATE +%s)) / (3600 * 24))) # days since DAYS_SINCE_DATE
+[[ $nextDaysSince -eq $prevDaysSince ]] && nextDailyChanges=$(($prevDailyChanges + 1)) || nextDailyChanges=0
+nextVersion="$PREFIX$MAJOR.$MINOR.$nextDaysSince.$nextDailyChanges"
+
+# check if we need to update version
+[[ $FORCE_UPDATE == true ]] && requiresUpdate=1 || requiresUpdate=$(($MINOR != $prevMinor))
+newCompatCount=$(node $GENERATOR_PATH $prevCompatCount $nextVersion $requiresUpdate $DAYS_SINCE_DATE $OUTPUT_FILE)
+
+if [[ $newCompatCount -ge 0 ]]; then
+	# add and remove tags
+	nextTag="$nextVersion-$newCompatCount"
+	
+	git tag $nextTag
+	git push origin $nextTag
+	if [[ -z $prevMajor ]]; then
+		git push origin --delete refs/tags/$prevTag
+	fi
+else
+	echo No changes found, skipping compatibility file generation
+fi
