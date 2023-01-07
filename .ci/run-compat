@@ -10,15 +10,12 @@ MAJOR=${6:-2}
 MINOR=${7:-0}
 
 # previous/current version data
-prevTag=$(git tag -l $PREFIX$MAJOR.*)
+prevTag=$(git describe --tags --abbrev=0 --match c2.* 2>/dev/null)
 IFS='.-' read -r prevMajor prevMinor prevDaysSince prevDailyChanges prevCompatCount <<< ${prevTag#*$PREFIX}
-
-echo $(git remote show origin)
-echo $prevTag
-
 
 # if tag is not found or processable then it's either the first run or something is wrong
 if [[ -z $prevMajor ]]; then
+	prevTag=
 	declare prev{Major,Minor,DaysSince,DailyChanges,CompatCount}=-1
 	echo Warning: couldn\'t find previous tag \"$PREFIX$MAJOR.*\", if this wasn\'t the first run then something went wrong
 fi
@@ -38,7 +35,7 @@ if [[ $newCompatCount -ge 0 ]]; then
 	
 	git tag $nextTag
 	git push origin $nextTag
-	if [[ -z $prevMajor ]]; then
+	if [[ $prevTag ]]; then
 		git push origin --delete refs/tags/$prevTag
 	fi
 else
