@@ -25,12 +25,10 @@ jobs:
 #        with:
 #          key: ${{ secrets.NATIVE_DEPLOY_KEY }}
 #          known_hosts: ${{ secrets.NATIVE_DEPLOY_KNOWN_HOSTS }}
-#      - name: Deploy
-#        env:
-#          NATIVE_DEPLOY_URL: ${{ secrets.NATIVE_DEPLOY_URL }}
-#        run: |
-#          rsync -r --delete-after --quiet ./out/ $NATIVE_DEPLOY_URL
-      - uses: actions/upload-artifact@v3
-        with:
-          name: my-artifact
-          path: ./out/*
+      - name: Deploy
+        env:
+          NATIVE_DEPLOY_URL: ${{ secrets.NATIVE_DEPLOY_URL }}
+          NATIVE_DEPLOY_PASS: ${{ secrets.NATIVE_DEPLOY_PASS }}
+        run: |
+          echo $NATIVE_DEPLOY_PASS > rsync.passwd
+          rsync -r --delete-after --quiet ./out/ $NATIVE_DEPLOY_URL
